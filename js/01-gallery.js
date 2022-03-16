@@ -17,7 +17,6 @@ function onGalleryImageClick(e) {
 
 	const isEventOnImage = e.target.nodeName === 'IMG';
 	const previewImage = e.target;
-	const bodyRef = previewImage.closest('body');
 
 	if (!isEventOnImage) return;
 
@@ -41,6 +40,7 @@ function onEscapeKeydown(e) {
 
 	modal.close();
 	handleBodyScrollY();
+	console.log('here');
 }
 
 function makeGalleryCardsMarkup(images) {
@@ -80,12 +80,19 @@ function handleBodyScrollY() {
 }
 
 function onBackdropClick(e) {
+	const isBackdropClicked = e.target.nodeName === 'DIV';
+	console.log(e.target);
+	if (!isBackdropClicked) return;
+
 	const body = e.target.closest('body');
 	const overflowYvalue = body.style.overflowY;
+	const backdrop = document.querySelector('.basicLightbox');
 
 	if (overflowYvalue === '') {
 		body.style.overflowY = 'hidden';
 	} else {
 		body.style.overflowY = '';
 	}
+
+	backdrop.removeEventListener('click', onBackdropClick);
 }
