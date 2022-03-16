@@ -53,12 +53,28 @@
 
 .sl-wrapper .sl-navigation button {
 	color: #ffffff;
+
+	transition: transform var(--animation-duration) var(--timing-function);
 }
 
 .sl-wrapper .sl-close {
 	color: #7e7a7a;
+
+	transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.sl-wrapper .sl-navigation button:hover,
+.sl-wrapper .sl-navigation button:focus {
+	transform: scale(2.5);
+}
+
+.sl-wrapper .sl-close:hover,
+.sl-wrapper .sl-close:focus {
+	transform: scale(2);
 }
 
 .sl-wrapper .sl-image .sl-caption {
+	font-size: 1.25rem;
+	text-align: center;
 	background-color: #7e7a7ab6;
 }
