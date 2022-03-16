@@ -16,13 +16,13 @@ function onGalleryImageClick(e) {
 	e.preventDefault();
 
 	const isEventOnImage = e.target.nodeName === 'IMG';
-	const previewImage = e.target;
+	const currentPreviewImage = e.target;
 
 	if (!isEventOnImage) return;
 
 	const modalImgRef = modal.element().querySelector('img');
 
-	setOriginalImageURL(previewImage, getOriginalImageURL, modalImgRef);
+	setOriginalImageURL(currentPreviewImage, getOriginalImageURL, modalImgRef);
 
 	modal.show();
 	handleBodyScrollY();
@@ -40,7 +40,6 @@ function onEscapeKeydown(e) {
 
 	modal.close();
 	handleBodyScrollY();
-	console.log('here');
 }
 
 function makeGalleryCardsMarkup(images) {
@@ -81,7 +80,7 @@ function handleBodyScrollY() {
 
 function onBackdropClick(e) {
 	const isBackdropClicked = e.target.nodeName === 'DIV';
-	console.log(e.target);
+
 	if (!isBackdropClicked) return;
 
 	const body = e.target.closest('body');
