@@ -6,11 +6,11 @@ const refs = {
 	body: document.querySelector('body'),
 };
 
+generateGalleryCards(galleryItems);
+
 const modal = basicLightbox.create(
 	`<div class="modal"><img src="" width="800" height="600"></div>`
 );
-
-generateGalleryCards(galleryItems);
 refs.gallery.addEventListener('click', onGalleryImageClickOpenModal);
 
 //===============================functions===============================================//

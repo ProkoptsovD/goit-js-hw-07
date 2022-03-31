@@ -1,10 +1,11 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryRef = document.querySelector('.gallery');
-const galleryCardsMarkup = makeGalleryCardsMarkup(galleryItems);
+const refs = {
+	gallery: document.querySelector('.gallery'),
+};
 
-galleryRef.insertAdjacentHTML('beforeend', galleryCardsMarkup);
+generateGalleryCards(galleryItems);
 
 const lightbox = new SimpleLightbox('.gallery a', {
 	overlayOpacity: 0.8,
@@ -14,6 +15,13 @@ const lightbox = new SimpleLightbox('.gallery a', {
 	captionsData: 'alt',
 	captionDelay: 250,
 });
+
+//===============================functions===============================================//
+function generateGalleryCards(objWithImages) {
+	const galleryCardsMarkup = makeGalleryCardsMarkup(objWithImages);
+
+	refs.gallery.insertAdjacentHTML('beforeend', galleryCardsMarkup);
+}
 
 function makeGalleryCardsMarkup(images) {
 	return images.map(({ description, original, preview }) => {
