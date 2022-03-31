@@ -1,45 +1,52 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryRef = document.querySelector('.gallery');
-const galleryCardsMarkup = makeGalleryCardsMarkup(galleryItems);
+const refs = {
+	gallery: document.querySelector('.gallery'),
+	body: document.querySelector('body'),
+};
 
-const modal = basicLightbox.create(`
-    <div class="modal">
-        <img src="" width="800" height="600">
-    </div>`);
+const modal = basicLightbox.create(
+	`<div class="modal"><img src="" width="800" height="600"></div>`
+);
 
-galleryRef.insertAdjacentHTML('beforeend', galleryCardsMarkup);
-galleryRef.addEventListener('click', onGalleryImageClick);
+generateGalleryCards(galleryItems);
+refs.gallery.addEventListener('click', onGalleryImageClickOpenModal);
 
-function onGalleryImageClick(e) {
+//===============================functions===============================================//
+function generateGalleryCards(objWithImages) {
+	const galleryCardsMarkup = makeGalleryCardsMarkup(objWithImages);
+
+	refs.gallery.insertAdjacentHTML('beforeend', galleryCardsMarkup);
+}
+
+function onGalleryImageClickOpenModal(e) {
 	e.preventDefault();
 
-	const isEventOnImage = e.target.nodeName === 'IMG';
+	const IMG_TAG = 'IMG';
+	const isEventOnImage = e.target.nodeName === IMG_TAG;
 	const currentPreviewImage = e.target;
+	const modalImgRef = modal.element().querySelector('img');
 
 	if (!isEventOnImage) return;
 
-	const modalImgRef = modal.element().querySelector('img');
-
-	setOriginalImageURL(currentPreviewImage, getOriginalImageURL, modalImgRef);
-
+	setOriginalImageURL(currentPreviewImage, modalImgRef);
 	modal.show();
-	handleBodyScrollY();
+	if (modal.visible()) setBodyScrollY('disabled');
 
-	window.addEventListener('keydown', onEscapeKeydown);
+	window.addEventListener('keydown', onEscapeKeydownCloseModal);
 }
 
-function onEscapeKeydown(e) {
+function onEscapeKeydownCloseModal(e) {
 	const ESC_KEY_CODE = 'Escape';
 	const isEscapeKeyPressed = e.code === ESC_KEY_CODE;
 
 	if (!isEscapeKeyPressed) return;
 
-	window.removeEventListener('keydown', onEscapeKeydown);
+	window.removeEventListener('keydown', onEscapeKeydownCloseModal);
 
 	modal.close();
-	handleBodyScrollY();
+	setBodyScrollY('enabled');
 }
 
 function makeGalleryCardsMarkup(images) {
@@ -57,41 +64,32 @@ function makeGalleryCardsMarkup(images) {
 	}).join``;
 }
 
-function getOriginalImageURL(image) {
-	return image.dataset.source;
+function setOriginalImageURL(image, modal) {
+	modal.src = image.dataset.source;
 }
 
-function setOriginalImageURL(image, getUrl, modal) {
-	modal.src = getUrl(image);
-}
+function setBodyScrollY(state) {
+	refs.body.addEventListener('click', onBackdropClickCloseModal);
 
-function handleBodyScrollY() {
-	const backdrop = document.querySelector('.basicLightbox');
-	const body = document.querySelector('body');
-
-	backdrop.addEventListener('click', onBackdropClick);
-
-	if (body.style.overflowY === '') {
-		body.style.overflowY = 'hidden';
-	} else {
-		body.style.overflowY = '';
+	switch (state) {
+		case 'disabled':
+			refs.body.style.overflowY = 'hidden';
+			break;
+		case 'enabled':
+			refs.body.style.overflowY = '';
+			break;
+		default:
+			refs.body.style.overflowY = '';
 	}
 }
 
-function onBackdropClick(e) {
-	const isBackdropClicked = e.target.nodeName === 'DIV';
+function onBackdropClickCloseModal(e) {
+	const IMG_TAG = 'IMG';
+	const isBackdropClicked = e.target.nodeName !== IMG_TAG;
 
 	if (!isBackdropClicked) return;
 
-	const body = e.target.closest('body');
-	const overflowYvalue = body.style.overflowY;
-	const backdrop = document.querySelector('.basicLightbox');
+	setBodyScrollY('enabled');
 
-	if (overflowYvalue === '') {
-		body.style.overflowY = 'hidden';
-	} else {
-		body.style.overflowY = '';
-	}
-
-	backdrop.removeEventListener('click', onBackdropClick);
+	refs.body.removeEventListener('click', onBackdropClickCloseModal);
 }
